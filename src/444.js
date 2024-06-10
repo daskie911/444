@@ -54,7 +54,7 @@ client.on('interactionCreate', async (interaction) => {
       interaction.editReply({
         content: "I couldn't find that role",
       });
-      return;
+      return
     }
 
     const hasRole = interaction.member.roles.cache.has(role.id);
