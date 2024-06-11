@@ -10,6 +10,10 @@ const commands = [
     name: "new",
     description: "Create new merch embed",
   },
+  {
+    name: "stats",
+    description: "Show server stats",
+  }
 ];
 
 const rest = new REST({ version: "10" }).setToken(process.env.TOKEN);

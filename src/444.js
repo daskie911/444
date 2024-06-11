@@ -44,7 +44,7 @@ client.on("interactionCreate", (interaction) => {
   }
 });
 
-client.on('interactionCreate', async (interaction) => {
+client.on("interactionCreate", async (interaction) => {
   try {
     if (!interaction.isButton()) return;
     await interaction.deferReply({ ephemeral: true });
@@ -54,7 +54,7 @@ client.on('interactionCreate', async (interaction) => {
       interaction.editReply({
         content: "I couldn't find that role",
       });
-      return
+      return;
     }
 
     const hasRole = interaction.member.roles.cache.has(role.id);
@@ -72,4 +72,40 @@ client.on('interactionCreate', async (interaction) => {
   }
 });
 
+client.on("interactionCreate", async (interaction) => {
+  if (!interaction.isCommand()) return;
+
+  try {
+    if (interaction.commandName === "stats") {
+      const { guild } = interaction;
+
+      // Fetch all members to ensure we have an updated count
+      await guild.members.fetch();
+
+      const memberCount = guild.memberCount;
+      const botCount = guild.members.cache.filter(
+        (member) => member.user.bot
+      ).size;
+      const humanCount = memberCount - botCount;
+
+      const embed = new EmbedBuilder()
+        .setTitle('Server Stats')
+        .setColor('#00FF00')
+        .addFields(
+          { name: 'Total members', value: `${memberCount}`, inline: true },
+          { name: 'Bots🤖', value: `${botCount}`, inline: true },
+          { name: 'Humans🙍🏻‍♂️', value: `${humanCount}`, inline: true }
+        )
+        .setTimestamp();
+
+      await interaction.reply({ embeds: [embed] });
+    }
+  } catch (error) {
+    console.error(error);
+    await interaction.reply({
+      content: 'There was an error while executing this command!',
+      ephemeral: true
+    });
+  }
+});
 client.login(process.env.TOKEN);
