@@ -1,5 +1,10 @@
 require("dotenv").config();
-const { Client, IntentsBitField, EmbedBuilder } = require("discord.js");
+const {
+  Client,
+  IntentsBitField,
+  EmbedBuilder,
+  ActivityType,
+} = require("discord.js");
 
 const client = new Client({
   intents: [
@@ -10,8 +15,30 @@ const client = new Client({
   ],
 });
 
+let status = [
+  {
+    name: "Your room",
+    type: ActivityType.Streaming,
+    url: "https://www.roblox.com/groups/33233085/444kuda#!/about",
+  },
+  {
+    name: "Roblox",
+    type: ActivityType.Playing,
+  },
+  {
+    name: "Pornhub",
+    type: ActivityType.Watching,
+    url: "https://www.pornhub.com/",
+  },
+];
+
 client.on("ready", () => {
   console.log(`✅OMG ${client.user.tag} is ready!✅`);
+
+  setInterval(() => {
+    let random = Math.floor(Math.random() * status.length);
+    client.user.setActivity(status[random]);
+  }, 10000);
 });
 
 client.on("messageCreate", (message) => {
@@ -38,11 +65,12 @@ client.on("interactionCreate", (interaction) => {
       .setImage(
         "https://tr.rbxcdn.com/41c467009a386a90e87b875a5ba4d74d/150/150/Image/Webp"
       )
-      .setFooter("444kuda")
+      .setFooter({ text: "444kuda" }) 
       .setTimestamp();
     interaction.reply({ embeds: [embed] });
   }
 });
+
 
 client.on("interactionCreate", async (interaction) => {
   try {
@@ -89,12 +117,12 @@ client.on("interactionCreate", async (interaction) => {
       const humanCount = memberCount - botCount;
 
       const embed = new EmbedBuilder()
-        .setTitle('Server Stats')
-        .setColor('#00FF00')
+        .setTitle("Server Stats")
+        .setColor("#00FF00")
         .addFields(
-          { name: 'Total members', value: `${memberCount}`, inline: true },
-          { name: 'Bots🤖', value: `${botCount}`, inline: true },
-          { name: 'Humans🙍🏻‍♂️', value: `${humanCount}`, inline: true }
+          { name: "Total members", value: `${memberCount}`, inline: true },
+          { name: "Bots🤖", value: `${botCount}`, inline: true },
+          { name: "Humans🙍🏻‍♂️", value: `${humanCount}`, inline: true }
         )
         .setTimestamp();
 
@@ -103,8 +131,8 @@ client.on("interactionCreate", async (interaction) => {
   } catch (error) {
     console.error(error);
     await interaction.reply({
-      content: 'There was an error while executing this command!',
-      ephemeral: true
+      content: "There was an error while executing this command!",
+      ephemeral: true,
     });
   }
 });
